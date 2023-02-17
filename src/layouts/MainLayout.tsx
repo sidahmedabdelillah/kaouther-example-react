@@ -13,16 +13,17 @@ import {
 } from "@mui/material";
 
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 import { PropsWithChildren, useState } from "react";
-import {
-  mainListItems,
-} from "../components/layout/listItems";
+import { mainListItems } from "../components/layout/listItems";
 import AppBar from "../components/layout/AppBar";
 import Drawer from "../components/layout/Drawer";
-import { Outlet } from 'react-router-dom'
+import { Outlet } from "react-router-dom";
+import { useAppStore } from "../store/appStore";
 function Copyright(props: any) {
   return (
     <Typography
@@ -32,10 +33,7 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" >
-        PND
-      </Link>{" "}
-      {new Date().getFullYear()}
+      <Link color="inherit">PND</Link> {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -44,6 +42,7 @@ function Copyright(props: any) {
 const drawerWidth: number = 240;
 
 const MainLayout = () => {
+  const appStore = useAppStore();
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -79,9 +78,11 @@ const MainLayout = () => {
             Dashboard
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+            {appStore.themeMode == "dark" ? (
+              <LightModeIcon onClick={() => appStore.setThemeMode("light")} />
+            ) : (
+              <DarkModeIcon onClick={() => appStore.setThemeMode("dark")} />
+            )}
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -99,15 +100,13 @@ const MainLayout = () => {
           </IconButton>
         </Toolbar>
         <Divider />
-        <List component="nav">
-          {mainListItems}
-        </List>
+        <List component="nav">{mainListItems}</List>
       </Drawer>
       <Box
         component="main"
         sx={{
           backgroundColor: (theme) =>
-            theme.palette.mode === "light"
+            appStore.themeMode === "light"
               ? theme.palette.grey[100]
               : theme.palette.grey[900],
           flexGrow: 1,

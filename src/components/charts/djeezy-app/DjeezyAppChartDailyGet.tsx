@@ -60,9 +60,7 @@ const DjeezyAppChartDailyGet = () => {
         : undefined;
       djeezyAppChartService.getFiveMinutsResults(lastDate).then((response) => {
         setChartData(
-          [...chartData, ...response].sort((a, b) =>
-            dayjs(a.date).diff(dayjs(b.date))
-          )
+          [...chartData, ...response]
         );
       });
     }, 5000);
